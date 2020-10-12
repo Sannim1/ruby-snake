@@ -1,0 +1,68 @@
+class Snake
+  class AteItselfError < StandardError; end;
+
+  attr_reader :size, :direction, :position, :parts
+
+  KEY_CODE_MAP = {
+    W: :up,
+    A: :left,
+    S: :down,
+    D: :right
+  }.freeze
+
+  def initialize(max_x, max_y)
+    @size = 4
+    @direction = :left
+    @parts = []
+    set_start_position(max_x, max_y)
+    create_snake
+  end
+
+  def create_snake
+    size.times do |iteration|
+      @parts << [position[0], position[1] + iteration]
+    end
+  end
+
+  def head
+    parts.first
+  end
+
+  def body
+    parts[1..]
+  end
+
+  def set_start_position(max_x, max_y)
+    @position = [Random.rand(0...max_x), Random.rand(0...max_y)]
+  end
+
+  def increase
+    @size += 1
+    @parts << parts.last
+  end
+
+  def update_head(idx, value)
+    @parts.first[idx] = value
+  end
+
+  def turn(key_code)
+    @direction = KEY_CODE_MAP.fetch(key_code.chr.upcase.to_sym, direction)
+  end
+
+  def step
+    new_head = [head.first, head.last]
+    case direction
+    when :left
+      new_head[1] -= 1
+    when :right
+      new_head[1] += 1
+    when :up
+      new_head[0] -= 1
+    when :down
+      new_head[0] += 1
+    end
+
+    parts.unshift(new_head)
+    parts.pop
+  end
+end
