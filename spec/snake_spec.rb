@@ -13,9 +13,11 @@ describe Snake do
 
     it "initializes the position of the snake's head" do
       snake_head = snake.parts.first
+
       expect(snake_head).to_not be_nil
-      expect(snake_head.size).to eq(2)
-      expect(snake_head.map(&:class).uniq).to eq([Integer])
+
+      expect(snake_head.x).to be_kind_of(Integer)
+      expect(snake_head.y).to be_kind_of(Integer)
     end
 
     it "initializes the length of the snake" do
@@ -30,7 +32,7 @@ describe Snake do
   describe "#step" do
     it "adds one part to the snake and removes the last part from the snake" do
       old_snake = snake
-      new_head = [snake.parts.first.first, snake.parts.first.last]
+      new_head = Point.with(x: snake.head.x, y: snake.head.y)
       old_snake.parts.unshift(new_head).pop
 
       snake.step
@@ -50,11 +52,12 @@ describe Snake do
   end
 
   describe "#update_head" do
-    it "updates the position of the snake's head if it meets a wall" do
-      snake_head = snake.parts.first
-      snake_head[0] = 2
-      snake.update_head(0, 2)
-      expect(snake.parts.first).to eq(snake_head)
+    let!(:old_head) { snake.head }
+    let(:new_position) { Point.with(x: old_head.x.next, y: old_head.y) }
+
+    it "sets the position of the snake's head to the supplied position" do
+      expect { snake.update_head(new_position) }.
+        to change(snake, :head).from(old_head).to(new_position)
     end
   end
 

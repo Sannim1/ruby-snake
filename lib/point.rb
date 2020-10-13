@@ -1,8 +1,3 @@
-class Point
-  attr_reader :x, :y
+require "values"
 
-  def initialize(x, y)
-    @x = x
-    @y = y
-  end
-end
+class Point < Value.new(:x, :y); end

@@ -1,7 +1,9 @@
 class Snake
   class AteItselfError < StandardError; end;
 
-  attr_reader :size, :direction, :position, :parts
+  attr_reader :size, :direction, :start_position, :parts
+
+  DEFAULT_SIZE = 4
 
   KEY_CODE_MAP = {
     W: :up,
@@ -10,17 +12,17 @@ class Snake
     D: :right
   }.freeze
 
-  def initialize(max_x, max_y)
-    @size = 4
+  def initialize(max_height, max_width)
+    @size = DEFAULT_SIZE
     @direction = :left
     @parts = []
-    set_start_position(max_x, max_y)
+    set_start_position(max_height, max_width)
     create_snake
   end
 
   def create_snake
     size.times do |iteration|
-      @parts << [position[0], position[1] + iteration]
+      @parts << Point.with(x: start_position.x, y: start_position.y + iteration)
     end
   end
 
@@ -32,8 +34,11 @@ class Snake
     parts[1..]
   end
 
-  def set_start_position(max_x, max_y)
-    @position = [Random.rand(0...max_x), Random.rand(0...max_y)]
+  def set_start_position(max_height, max_width)
+    @start_position = Point.with(
+      x: Random.rand(0...max_height),
+      y: Random.rand(0...max_width)
+    )
   end
 
   def increase
@@ -41,8 +46,8 @@ class Snake
     @parts << parts.last
   end
 
-  def update_head(idx, value)
-    @parts.first[idx] = value
+  def update_head(new_head)
+    @parts[0] = new_head
   end
 
   def turn(key_code)
@@ -50,16 +55,11 @@ class Snake
   end
 
   def step
-    new_head = [head.first, head.last]
-    case direction
-    when :left
-      new_head[1] -= 1
-    when :right
-      new_head[1] += 1
-    when :up
-      new_head[0] -= 1
-    when :down
-      new_head[0] += 1
+    new_head = case direction
+    when :left then Point.with(x: head.x, y: head.y.pred)
+    when :right then Point.with(x: head.x, y: head.y.next)
+    when :up then Point.with(x: head.x.pred, y: head.y)
+    when :down then Point.with(x: head.x.next, y: head.y)
     end
 
     parts.unshift(new_head)

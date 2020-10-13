@@ -28,23 +28,41 @@ describe Game do
   end
 
   describe "#check_if_snake_met_wall" do
-    it do
-      new_game.snake.parts[0][1] = new_game.gameboard.width
+    let(:snake) { new_game.snake }
 
-      expect { new_game.check_if_snake_met_wall }.
-        to change { new_game.snake.parts[0][1] }.
-        from(new_game.gameboard.width).
-        to(0)
+    context "when the snake hits the wall" do
+      before { snake.parts[0] = Point.with(x: snake.head.x, y: new_game.gameboard.width) }
+
+      it "wraps the head to the other side" do
+        expect { new_game.check_if_snake_met_wall }.
+          to change { snake.head.y }.from(new_game.gameboard.width).to(0)
+      end
+    end
+
+    context "when the snake hasn't hit the wall" do
+      it "does nothing" do
+        expect { new_game.check_if_snake_met_wall }.to_not change { snake.head }
+      end
     end
   end
 
   describe "#check_if_snake_ate_food" do
-    it do
-      new_game.snake.parts[0] = new_game.food.coordinates
-      expect { new_game.check_if_snake_ate_food }.to change { new_game.snake.size }.from(4).to(5)
+    let(:snake) { new_game.snake }
+    let(:food) { new_game.food }
 
-      new_game.snake.parts[0] = new_game.food.coordinates
-      expect { new_game.check_if_snake_ate_food }.to change { new_game.snake.size }.from(5).to(6)
+    context "when the snake's head coincides with the food's coordinates" do
+      before { snake.parts[0] = Point.with(x: food.x, y: food.y) }
+
+      it "increases the snake's size" do
+        expect { new_game.check_if_snake_ate_food }.
+          to change { snake.size }.from(4).to(5)
+      end
+    end
+
+    context "when there's no food at the position of the snake's head" do
+      it "does nothing" do
+        expect { new_game.check_if_snake_ate_food }.to_not change { snake.size }
+      end
     end
   end
 

@@ -11,19 +11,28 @@ class Game
 
   def print_board
     system("clear")
-    puts "Your size is #{snake.size} | [Q]uit"
+    puts "Score: #{score} | [Q]uit"
 
     gameboard.board.each { |row| puts row.join(" ") }
+  end
+
+  def score
+    snake.size - Snake::DEFAULT_SIZE
   end
 
   def draw_food_and_snake
     gameboard.create_board
     @gameboard.board[food.x][food.y] = 'o'
+
     snake.parts.each do |part|
-      @gameboard.board[part.first][part.last] = 'x'
+      @gameboard.board[part.x][part.y] = (part == snake.head) ? snake_head_char : 'x'
     end
 
     print_board
+  end
+
+  def snake_head_char
+    { left: "<", right: ">", up: "^", down: "*" }.fetch(snake.direction)
   end
 
   def show_message(text)
@@ -55,15 +64,22 @@ class Game
   end
 
   def check_if_snake_met_wall
-    snake.update_head(1, 0) if snake.head[1] >= gameboard.width
-    snake.update_head(1, gameboard.width - 1) if snake.head[1] < 0 ###
-    # snake.update_head(1, gameboard.width - 1) if snake.head[1] == gameboard.length - 1 ###
-    snake.update_head(0, gameboard.length - 1) if snake.head[0] < 0
-    snake.update_head(0, 0) if snake.head[0] >= gameboard.length
+    new_head_x, new_head_y = snake.head.x, snake.head.y
+    max_width, max_height = gameboard.width.pred, gameboard.length.pred
+
+    new_head_x = max_height if snake.head.x < 0
+    new_head_x = 0 if snake.head.x > max_height
+
+    new_head_y = 0 if snake.head.y > max_width
+    new_head_y = max_width if snake.head.y < 0
+
+    return if [new_head_x, new_head_y] == [snake.head.x, snake.head.y]
+
+    snake.update_head(Point.with(x: new_head_x, y: new_head_y))
   end
 
   def check_if_snake_ate_food
-    if snake.head[0] == food.x && snake.head[1] == food.y
+    if snake.head.x == food.x && snake.head.y == food.y
       snake.increase
       @food = Food.new(gameboard.width, gameboard.length)
     end
