@@ -1,13 +1,13 @@
 require "spec_helper"
 
-describe Game do
-  subject(:new_game) { Game.new }
+RSpec.describe RubySnake::Game do
+  subject(:new_game) { described_class.new }
 
   describe "#new" do
     it "instantiates a new game" do
-      expect(new_game.gameboard).to be_kind_of(Board)
-      expect(new_game.snake).to be_kind_of(Snake)
-      expect(new_game.food).to be_kind_of(Food)
+      expect(new_game.gameboard).to be_kind_of(RubySnake::Board)
+      expect(new_game.snake).to be_kind_of(RubySnake::Snake)
+      expect(new_game.food).to be_kind_of(RubySnake::Food)
     end
   end
 
@@ -22,8 +22,8 @@ describe Game do
     it do
       new_game.snake.parts[0] = new_game.snake.parts.last
 
-      expect { new_game.check_if_snake_ate_itself }.to raise_error(Snake::AteItselfError)
-      expect { new_game.check_snake_position }.to raise_error(Snake::AteItselfError)
+      expect { new_game.check_if_snake_ate_itself }.to raise_error(RubySnake::Snake::AteItselfError)
+      expect { new_game.check_snake_position }.to raise_error(RubySnake::Snake::AteItselfError)
     end
   end
 
@@ -31,7 +31,7 @@ describe Game do
     let(:snake) { new_game.snake }
 
     context "when the snake hits the wall" do
-      before { snake.parts[0] = Point.with(x: snake.head.x, y: new_game.gameboard.width) }
+      before { snake.parts[0] = RubySnake::Point.with(x: snake.head.x, y: new_game.gameboard.width) }
 
       it "wraps the head to the other side" do
         expect { new_game.check_if_snake_met_wall }.
@@ -51,7 +51,7 @@ describe Game do
     let(:food) { new_game.food }
 
     context "when the snake's head coincides with the food's coordinates" do
-      before { snake.parts[0] = Point.with(x: food.x, y: food.y) }
+      before { snake.parts[0] = RubySnake::Point.with(x: food.x, y: food.y) }
 
       it "increases the snake's size" do
         expect { new_game.check_if_snake_ate_food }.

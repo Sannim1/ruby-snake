@@ -1,14 +1,14 @@
 require "spec_helper"
 
-describe Board do
+RSpec.describe RubySnake::Board do
   describe "#new" do
     it "instantiates a new board" do
-      expect(Board.new(40, 40).board).to_not be_nil
+      expect(described_class.new(40, 40).board).to_not be_nil
     end
   end
 
   describe "#create_board" do
-    let(:gameboard) { Board.new(40, 40) }
+    let(:gameboard) { described_class.new(40, 40) }
 
     it "returns an array" do
       expect(gameboard.board).to be_instance_of(Array)
@@ -20,7 +20,7 @@ describe Board do
     end
 
     it "returns an empty board" do
-      expect(gameboard.board.flatten.uniq).to eq([Board::DOT])
+      expect(gameboard.board.flatten.uniq).to eq([described_class::DOT])
     end
   end
 end

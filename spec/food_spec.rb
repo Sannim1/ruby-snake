@@ -1,7 +1,7 @@
 require "spec_helper"
 
-describe Food do
-  let(:food_item) { Food.new(25, 25) }
+RSpec.describe RubySnake::Food do
+  let(:food_item) { described_class.new(25, 25) }
 
   describe "#new" do
     it "instantiates a food item at the right co-ordinates" do

@@ -1,4 +1,4 @@
-source 'https://rubygems.org'
-gem 'rspec'
-gem 'pry'
-gem 'values'
+source "https://rubygems.org"
+
+# Specify your gem's dependencies in ruby_snake.gemspec
+gemspec

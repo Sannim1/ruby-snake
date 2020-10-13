@@ -1,18 +1,14 @@
-Dir[File.expand_path("../lib/*.rb", File.dirname(__FILE__))].each do |file|
-  require file
-end
-
-Dir[File.expand_path('../lib/errors/*.rb', File.dirname(__FILE__))].each do |file|
-  require file
-end
+require "bundler/setup"
+require "ruby_snake"
 
 RSpec.configure do |config|
-  # Use color in STDOUT
-  config.color = true
+  # Enable flags like --only-failures and --next-failure
+  config.example_status_persistence_file_path = ".rspec_status"
 
-  # Use color not only in STDOUT but also in pagers and files
-  config.tty = true
+  # Disable RSpec exposing methods globally on `Module` and `main`
+  config.disable_monkey_patching!
 
-  # Use the specified formatter
-  config.formatter = :documentation
+  config.expect_with :rspec do |c|
+    c.syntax = :expect
+  end
 end

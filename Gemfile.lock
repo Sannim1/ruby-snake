@@ -1,3 +1,9 @@
+PATH
+  remote: .
+  specs:
+    ruby_snake (0.1.0)
+      values
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -7,6 +13,7 @@ GEM
     pry (0.13.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
+    rake (10.5.0)
     rspec (3.9.0)
       rspec-core (~> 3.9.0)
       rspec-expectations (~> 3.9.0)
@@ -26,9 +33,11 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bundler (~> 2.0)
   pry
-  rspec
-  values
+  rake (~> 10.0)
+  rspec (~> 3.0)
+  ruby_snake!
 
 BUNDLED WITH
    2.1.4

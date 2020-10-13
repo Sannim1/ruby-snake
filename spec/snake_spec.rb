@@ -1,10 +1,10 @@
 require "spec_helper"
 
-describe Snake do
-  let(:snake) { Snake.new(4, 4) }
+RSpec.describe RubySnake::Snake do
+  let(:snake) { described_class.new(4, 4) }
 
   describe "#new" do
-    let(:snake) { Snake.new(4, 4) }
+    let(:snake) { described_class.new(4, 4) }
 
     it "is an array of body parts" do
       expect(snake.parts).to be_kind_of(Array)
@@ -32,7 +32,7 @@ describe Snake do
   describe "#step" do
     it "adds one part to the snake and removes the last part from the snake" do
       old_snake = snake
-      new_head = Point.with(x: snake.head.x, y: snake.head.y)
+      new_head = RubySnake::Point.with(x: snake.head.x, y: snake.head.y)
       old_snake.parts.unshift(new_head).pop
 
       snake.step
@@ -53,7 +53,7 @@ describe Snake do
 
   describe "#update_head" do
     let!(:old_head) { snake.head }
-    let(:new_position) { Point.with(x: old_head.x.next, y: old_head.y) }
+    let(:new_position) { RubySnake::Point.with(x: old_head.x.next, y: old_head.y) }
 
     it "sets the position of the snake's head to the supplied position" do
       expect { snake.update_head(new_position) }.
